@@ -1,0 +1,23 @@
+{
+  "name": "kiyomi",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dest/node/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node_modules/.bin/electron .",
+    "release": "node release.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron-connect": "^0.3.3",
+    "electron-packager": "^5.1.0",
+    "electron-prebuilt": "^0.33.0",
+    "eslint-plugin-react": "^3.4.2",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-sourcemaps": "^1.5.2"
+  }
+}
