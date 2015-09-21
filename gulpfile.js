@@ -13,7 +13,7 @@ gulp.task('babel_node', function(){
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./dest/node/'));
+    .pipe(gulp.dest('./app/node/'));
 });
 
 gulp.task('babel_client', function(){
@@ -21,7 +21,7 @@ gulp.task('babel_client', function(){
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./dest/client/'));
+    .pipe(gulp.dest('./app/client/'));
 });
 
 gulp.task('packaging', function(){
@@ -37,6 +37,6 @@ gulp.task('watch', function(){
 gulp.task('start', ['babel_node', 'babel_client'], function ()  {
   electron.start();
   gulp.watch('./src/**/*.es6', ['babel_node', 'babel_client']);
-  gulp.watch(['index.js','./dest/client/*.js'], electron.restart);
-  gulp.watch(['index.html'], electron.reload);
+  gulp.watch(['./app/node/index.js','./app/client/*.js'], electron.restart);
+  gulp.watch(['./app/index.html'], electron.reload);
 });
