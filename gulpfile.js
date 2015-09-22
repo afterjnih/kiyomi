@@ -89,6 +89,14 @@ gulp.task('babel_app', function(){
     .pipe(gulp.dest('./app/'));
 });
 
+gulp.task('copy_html', function(){
+  return gulp.src('./src/index.html')
+    .pipe(plumber({
+      errorHandler: notify.onError('Error: <%= error.message %>')
+    }))
+    .pipe(gulp.dest('./app/'));
+})
+
 gulp.task('packaging', function(){
 });
 
@@ -98,9 +106,10 @@ gulp.task('test', function(){
 gulp.task('watch', function(){
   gulp.watch(['./src/**/*.{es6,jsx}', './src/*.{es6,jsx}'], ['babel_browser', 'babel_renderer', 'babel_app','babel_component', 'babel_lib']);
   gulp.watch(['./src/styles/*.scss'], ['sass']);
+  gulp.watch(['./src/index.html'], ['copy_html']);
 });
 
-gulp.task('start', ['watch', 'babel_component', 'babel_browser', 'babel_renderer', 'babel_app', 'sass'], function ()  {
+gulp.task('start', ['watch', 'babel_component', 'babel_browser', 'babel_renderer', 'babel_app', 'sass', 'copy_html'], function ()  {
   electron.start();
   //gulp.watch('./src/**/*.es6', ['babel_browser', 'babel_renderer']);
   gulp.watch(['./app/app.js','./app/browser/*.js'], electron.restart);
