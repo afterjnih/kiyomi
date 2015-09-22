@@ -1,4 +1,6 @@
+import fs from 'fs'
 import React from 'react'
+import {renderBook} from './../../lib/pdfWrapper'
 
 export class Books extends React.Component{
   constructor () {
@@ -43,18 +45,50 @@ class Book extends React.Component{
   }
 }
 
-//class BookCanvas extends React.Component{
-//  constructor(){
-//    super();
-//  }
-//
-//  render(){
-//    return(
-//      <canvas ref="bookCanvas"/>
-//    );
-//  }
-//
-//  componentDidMount(){
-//   var canvasNode = React.findDOMNode(this.refs.mainCanvas);
-//  }
-//}
+export class BooksCanvas extends React.Component{
+  constructor(){
+    super();
+  }
+
+  propTypes = {
+    books: React.PropTypes.array.isRequired
+  }
+
+  renderBooks(books){
+    return books.map((book, i) => {
+        return(
+          <BookCanvas book={book} bookNumber={i}/>
+        );
+      }
+    );
+  }
+
+  render(){
+    console.log(this.props.books);
+    return(
+      <div className='bookshelf'>
+        {this.renderBooks(this.props.books)}
+      </div>
+    );
+  }
+}
+
+export class BookCanvas extends React.Component{
+  constructor(){
+    super();
+  }
+  propTypes = {
+    book: React.PropTypes.string.isRequired,
+    bookNumber: React.PropTypes.number.isRequired
+  }
+
+  render(){
+    return(
+      <canvas ref='bookCanvasRef'/>
+    );
+  }
+
+  componentDidMount(){
+    renderBook(fs.readFileSync(bookshelf.register() + '/content/' + this.props.book), React.findDOMNode(this.refs.bookCanvasRef));
+  }
+}
