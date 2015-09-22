@@ -42,3 +42,19 @@ class Book extends React.Component{
     );
   }
 }
+
+//class BookCanvas extends React.Component{
+//  constructor(){
+//    super();
+//  }
+//
+//  render(){
+//    return(
+//      <canvas ref="bookCanvas"/>
+//    );
+//  }
+//
+//  componentDidMount(){
+//   var canvasNode = React.findDOMNode(this.refs.mainCanvas);
+//  }
+//}

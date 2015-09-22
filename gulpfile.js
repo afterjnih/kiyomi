@@ -63,6 +63,19 @@ gulp.task('babel_component', function(){
     .pipe(gulp.dest('./app/renderer/components/'));
 });
 
+gulp.task('babel_lib', function(){
+  return gulp.src('./src/lib/*.{es6,jsx}')
+    .pipe(plumber({
+      errorHandler: notify.onError('Error: <%= error.message %>')
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      stage: 0
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./app/lib/'));
+});
+
 gulp.task('babel_app', function(){
   return gulp.src('./src/app.{es6,jsx}')
     .pipe(plumber({
@@ -83,7 +96,7 @@ gulp.task('test', function(){
 });
 
 gulp.task('watch', function(){
-  gulp.watch(['./src/**/*.{es6,jsx}', './src/*.{es6,jsx}'], ['babel_browser', 'babel_renderer', 'babel_app','babel_component']);
+  gulp.watch(['./src/**/*.{es6,jsx}', './src/*.{es6,jsx}'], ['babel_browser', 'babel_renderer', 'babel_app','babel_component', 'babel_lib']);
   gulp.watch(['./src/styles/*.scss'], ['sass']);
 });
 
