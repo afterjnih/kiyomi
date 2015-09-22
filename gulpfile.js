@@ -7,7 +7,9 @@ var electron = require('electron-connect').server.create();
 var sass = require('gulp-sass');
 var plumber = require('gulp-plumber');
 var notify = require('gulp-notify');
-
+var espower = require('gulp-espower');
+var mocha = require('gulp-mocha');
+var TEST = ['./test/*.es6'];
 
 gulp.task('default', ['start'], function(){
 });
@@ -100,7 +102,26 @@ gulp.task('copy_html', function(){
 gulp.task('packaging', function(){
 });
 
-gulp.task('test', function(){
+gulp.task('powered-test', function(){
+  return gulp.src(TEST)
+  .pipe(plumber({
+    errorHandler: notify.onError('Error: <%= error.message %>')
+  }))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      stage: 0
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./powered-test/'));
+});
+
+gulp.task('test', ['babel_component', 'babel_browser', 'babel_renderer', 'babel_app', 'sass', 'copy_html', 'powered-test'], function(){
+  return gulp.src('./powered-test/*.js')
+         .pipe(plumber({
+           errorHandler: notify.onError('Error: <%= error.message %>')
+         }))
+         .pipe(espower())
+         .pipe(mocha());
 });
 
 gulp.task('watch', function(){
