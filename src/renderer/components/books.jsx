@@ -1,6 +1,8 @@
 import fs from 'fs'
 import React from 'react'
 import {renderBook} from './../../lib/pdfWrapper'
+import {Viewer} from './viewer'
+import {BookShelfActions} from './../../action/action'
 
 export class Books extends React.Component{
   constructor () {
@@ -54,10 +56,14 @@ export class BooksCanvas extends React.Component{
     books: React.PropTypes.array.isRequired
   }
 
+  handleItemChoose(item){
+    BookShelfActions.choose(item);
+  }
+
   renderBooks(books){
     return books.map((book, i) => {
         return(
-          <BookCanvas book={book} bookNumber={i}/>
+          <BookCanvas book={book} bookNumber={i} onChoose={this.handleItemChoose}/>
         );
       }
     );
@@ -79,12 +85,20 @@ export class BookCanvas extends React.Component{
   }
   propTypes = {
     book: React.PropTypes.string.isRequired,
-    bookNumber: React.PropTypes.number.isRequired
+    bookNumber: React.PropTypes.number.isRequired,
+    onChoose: React.PropTypes.func.isRequired
+  }
+
+  handleClick(e){
+    //React.render(<Viewer/>, document.getElementById('canvas-wrapper'));
+    console.log(this.props.book);
+    this.props.onChoose(this.props.book);
   }
 
   render(){
     return(
-      <canvas ref='bookCanvasRef'/>
+      //use bind to workaround undefined this on es6
+      <canvas ref='bookCanvasRef' onClick={this.handleClick.bind(this)}/>
     );
   }
 

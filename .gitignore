@@ -41,3 +41,5 @@ release.js
 .eslintrc
 
 .idea/
+
+powered-test/

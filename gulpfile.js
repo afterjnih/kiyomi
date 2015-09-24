@@ -91,6 +91,45 @@ gulp.task('babel_app', function(){
     .pipe(gulp.dest('./app/'));
 });
 
+gulp.task('babel_action', function(){
+  return gulp.src('./src/action/*.{es6,jsx}')
+    .pipe(plumber({
+      errorHandler: notify.onError('Error: <%= error.message %>')
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      stage: 0
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./app/action/'));
+});
+
+gulp.task('babel_dispatcher', function(){
+  return gulp.src('./src/dispatcher/*.{es6,jsx}')
+    .pipe(plumber({
+      errorHandler: notify.onError('Error: <%= error.message %>')
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      stage: 0
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./app/dispatcher/'));
+});
+
+gulp.task('babel_store', function(){
+  return gulp.src('./src/store/*.{es6,jsx}')
+    .pipe(plumber({
+      errorHandler: notify.onError('Error: <%= error.message %>')
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      stage: 0
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./app/store/'));
+});
+
 gulp.task('copy_html', function(){
   return gulp.src('./src/index.html')
     .pipe(plumber({
@@ -125,14 +164,14 @@ gulp.task('test', ['babel_component', 'babel_browser', 'babel_renderer', 'babel_
 });
 
 gulp.task('watch', function(){
-  gulp.watch(['./src/**/*.{es6,jsx}', './src/*.{es6,jsx}'], ['babel_browser', 'babel_renderer', 'babel_app','babel_component', 'babel_lib']);
+  gulp.watch(['./src/**/*.{es6,jsx}', './src/*.{es6,jsx}'], ['babel_browser', 'babel_renderer', 'babel_app','babel_component', 'babel_lib', 'babel_action', 'babel_dispatcher', 'babel_store']);
   gulp.watch(['./src/styles/*.scss'], ['sass']);
   gulp.watch(['./src/index.html'], ['copy_html']);
 });
 
-gulp.task('start', ['watch', 'babel_component', 'babel_browser', 'babel_renderer', 'babel_app', 'sass', 'copy_html'], function ()  {
+gulp.task('start', ['watch', 'babel_component', 'babel_browser', 'babel_renderer', 'babel_app', 'sass', 'copy_html', 'babel_action'], function ()  {
   electron.start();
-  //gulp.watch('./src/**/*.es6', ['babel_browser', 'babel_renderer']);
+  gulp.watch('./src/**/*.es6', ['babel_browser', 'babel_renderer']);
   gulp.watch(['./app/app.js','./app/browser/*.js'], electron.restart);
   gulp.watch(['./app/index.html', './app/renderer/*.js', './app/styles/*.css'], electron.reload);
 });
