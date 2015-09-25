@@ -6,10 +6,11 @@ import {bookshelfStore} from './store/BookshelfStore';
 import {viewerStore} from './store/viewerStore';
 import {dispatcher} from './dispatcher/dispatcher';
 
+resizeTo(600, window.parent.screen.height);
+
 dispatcher.register(payload =>{
   switch (payload.actionType) {
     case "choose":
-      console.log('nextttttttttttttttttt');
       bookshelfStore.choose(payload.item);
       break;
     case "start":
@@ -26,8 +27,7 @@ dispatcher.register(payload =>{
       break;
   }
 });
-console.log(dispatcher);
-//console.log('nextttttttttttttttttt');
+
 let bookshelf = new Bookshelf();
 let books;
 console.log(bookshelf.register());
@@ -59,11 +59,9 @@ class App extends React.Component{
   }
 
   render(){
-    console.log(this.state.purpose);
     if(this.state.purpose == 'bookshelf'){
       return(<BooksCanvas books={books}/>);
     }else if(this.state.purpose == 'view'){
-      console.log(this.state.item);
       return(<Viewer book={this.state.item}/>);
     }
   }
