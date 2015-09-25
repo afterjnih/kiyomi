@@ -2,7 +2,7 @@ import fs from 'fs'
 import React from 'react'
 import {renderBook} from './../../lib/pdfWrapper'
 import {Viewer} from './viewer'
-import {BookShelfActions} from './../../action/action'
+import {BookshelfActions} from './../../action/action'
 
 export class Books extends React.Component{
   constructor () {
@@ -57,7 +57,7 @@ export class BooksCanvas extends React.Component{
   }
 
   handleItemChoose(item){
-    BookShelfActions.choose(item);
+    BookshelfActions.choose(item);
   }
 
   renderBooks(books){

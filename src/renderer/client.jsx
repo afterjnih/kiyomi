@@ -2,19 +2,32 @@ import {BooksCanvas} from './renderer/components/books';
 import {Viewer} from './renderer/components/viewer';
 import React from 'react';
 import Bookshelf from './browser/bookshelf';
-import {store} from './store/store';
+import {bookshelfStore} from './store/BookshelfStore';
+import {viewerStore} from './store/viewerStore';
 import {dispatcher} from './dispatcher/dispatcher';
 
 dispatcher.register(payload =>{
   switch (payload.actionType) {
     case "choose":
-      store.choose(payload.item);
+      console.log('nextttttttttttttttttt');
+      bookshelfStore.choose(payload.item);
       break;
     case "start":
-      store.start(payload.item);
+      bookshelfStore.start(payload.item);
+      break;
+    case "renderPage":
+      viewerStore.renderPage(payload.item, payload.page);
+      break;
+    case "movePreviousPage":
+      viewerStore.movePreviousPage();
+      break;
+    case "moveNextPage":
+      viewerStore.moveNextPage();
       break;
   }
 });
+console.log(dispatcher);
+//console.log('nextttttttttttttttttt');
 let bookshelf = new Bookshelf();
 let books;
 console.log(bookshelf.register());
@@ -29,9 +42,7 @@ class App extends React.Component{
 
   handleChange(){
     //store.choose(this.props.item);
-    store.bookName((item) =>{
-      //this.state.purpose = 'view';
-      //this.props.item = item;
+    bookshelfStore.bookName((item) =>{
       this.setState({
         purpose: 'view',
         item: item
@@ -40,11 +51,11 @@ class App extends React.Component{
   }
 
   componentDidMount(){
-    store.addChangeListener(this.handleChange);
+    bookshelfStore.addChangeListener(this.handleChange);
   }
 
   componentWillUnmount(){
-    store.removeChangeListener(this.handleChange);
+    bookshelfStore.removeChangeListener(this.handleChange);
   }
 
   render(){

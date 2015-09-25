@@ -3,6 +3,58 @@ global.navigator = {userAgent: 'node'};
 global.PDFJS = {};
 global.DOMParser = require('./vendor/domparsermock.js');
 
+export class OpenViewer{
+  constructor(path, domTarget, pageNumDom, pageCountDom, pageNum)
+  {
+    this.pdfDoc = null;
+    this.canvas = domTarget;
+    this.ctx = this.canvas.getContext('2d');
+    this.scale = 1.5;
+    this.pageRendering = false;
+    this.pageNumPending = null;
+    this.pageNumDom = pageNumDom;
+    this.pageCountDom = pageCountDom;
+    this.data = new Uint8Array(path);
+    PDFJS.getDocument(this.data).then((pdfDoc_) => {
+      this.pdfDoc = pdfDoc_;
+      this.pageCountDom.textContent = this.pdfDoc.numPages;
+      this.renderPage(pageNum);
+    });
+  }
+
+   renderPage(pageNum){
+      this.pageRendering = true;
+      this.pdfDoc.getPage(pageNum).then((page) => {
+        let viewport = page.getViewport(this.scale);
+        this.canvas.height = viewport.height;
+        this.canvas.width = viewport.width;
+
+        var renderContext = {
+          canvasContext: this.ctx,
+          viewport: viewport
+        };
+        var renderTask = page.render(renderContext);
+
+        renderTask.promise.then(() => {
+          this.pageRendering = false;
+          if(this.pageNumPending != null){
+            _renderPage(this.pageNumPending);
+            this.pageNumPending = null;
+          }
+        });
+      });
+      this.pageNumDom.textContent = pageNum;
+  }
+
+  queueRenderPage(pageNum){
+    if(this.pageRendering){
+      this.pageNumPending = pageNum;
+    }else{
+      _renderPage(pageNum);
+    }
+  }
+}
+
 export function viewerBook(path, domTarget, prevDom, nextDom, pageNumDom, pageCountDom){
   var pdfDoc = null,
       pageNum = 1,
