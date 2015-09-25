@@ -1,9 +1,8 @@
 import EventEmitter from 'event-emitter';
 var CHANGE_EVENT = "changeEvent"
 
-class Store{
+export class Store{
   constructor(){
-    this.purpose = 'bookshelf';
     this.emitter = new EventEmitter();
   }
 
@@ -17,21 +16,6 @@ class Store{
 
   removeChangeListener(callback){
     this.emitter.removeListener(CHANGE_EVENT, callback);
-  }
-
-  choose(item){
-    console.log("chosen item is" + item);
-    this.purpose = 'view';
-    this.item = item;
-   this.emitChange();
-  }
-
-  start(item){
-    this.emitChange();
-  }
-
-  bookName(callback){
-   callback(this.item);
   }
 }
 var store = new Store();

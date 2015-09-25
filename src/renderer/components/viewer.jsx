@@ -3,6 +3,9 @@ import fs from 'fs';
 import Bookshelf from './../../browser/bookshelf';
 import {renderBook} from './../../lib/pdfWrapper'
 import {viewerBook} from './../../lib/pdfWrapper'
+import {OpenViewer} from './../../lib/pdfWrapper'
+import {ViewerActions} from './../../action/action'
+import {viewerStore} from './../../store/viewerStore';
 
 var bookshelf = new Bookshelf();
 //global.window = global;
@@ -24,24 +27,43 @@ var styles = {
 export class Viewer extends React.Component{
   constructor(){
     super();
+    this.viewer = null;
+    this.state = {pageNum: 1, pageCount:100};
+    this.handleChange = this.handleChange.bind(this);
   }
 
   propTypes = {
     book: React.PropTypes.string.isRequired
   }
 
+  handleClickPrevious(e){
+    ViewerActions.movePreviousPage();
+  }
+
+  handleClickNext(e){
+    ViewerActions.moveNextPage();
+  }
+
+  handleChange(){
+    viewerStore.getPageNum((pageNum) => {
+      this.setState({
+        pageNum: pageNum
+      });
+    });
+  }
+
   render(){
     return(
       <div>
         <div id='controller'>
-          <button id='prev' ref='prev'>Previous</button>
+          <button id='prev' ref='prev' onClick={this.handleClickPrevious.bind(this)}>Previous</button>
           <span>
             Page:
-            <span id='pageNum' ref='pageNum'>1</span>
+            <span id='pageNum' ref='pageNum'>{this.state.pageNum}</span>
             /
-            <span id='pageCount' ref='pageCount'>14</span>
+            <span id='pageCount' ref='pageCount'>{this.state.pageCount}</span>
           </span>
-          <button id='next' ref='next'>Next</button>
+          <button id='next' ref='next' onClick={this.handleClickNext.bind(this)}>Next</button>
         </div>
         <canvas style={styles.viewer} ref='viewerCanvasRef'/>
       </div>
@@ -49,15 +71,21 @@ export class Viewer extends React.Component{
   }
 
   componentDidMount(){
-    console.log('hey');
-    console.log(this.props.book);
-    //renderBook(fs.readFileSync(bookshelf.register() + '/content/' + this.props.book), React.findDOMNode(this.refs.viewerCanvasRef));
-    viewerBook(fs.readFileSync(bookshelf.register() + '/content/' + this.props.book)
-             , React.findDOMNode(this.refs.viewerCanvasRef)
-             , React.findDOMNode(this.refs.prev)
-             , React.findDOMNode(this.refs.next)
-             , React.findDOMNode(this.refs.pageNum)
-             , React.findDOMNode(this.refs.pageCount)
-              );
+    this.viewer = new OpenViewer(
+                             fs.readFileSync(bookshelf.register() + '/content/' + this.props.book)
+                           , React.findDOMNode(this.refs.viewerCanvasRef)
+                           , React.findDOMNode(this.refs.pageNum)
+                           , React.findDOMNode(this.refs.pageCount)
+                           , this.state.pageNum
+                            );
+    viewerStore.addChangeListener(this.handleChange);
+  }
+
+  componentDidUpdate(){
+    this.viewer.renderPage(this.state.pageNum);
+  }
+
+  componentWillUnmount(){
+    viewerStore.removeChangeListener(this.handleChange);
   }
 }

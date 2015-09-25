@@ -1,6 +1,6 @@
 import {dispatcher} from './../dispatcher/dispatcher'
 
-export var BookShelfActions = {
+export var BookshelfActions = {
   choose: (item) => {
     dispatcher.dispatch({
       actionType: 'choose',
@@ -12,6 +12,28 @@ export var BookShelfActions = {
     dispatcher.dispatch({
       actionType: 'start',
       item: item
+    });
+  }
+}
+
+export var ViewerActions = {
+  renderPage: (item, page) => {
+    dispatcher.dispatch({
+      actionType: 'render',
+      item: item,
+      page: page
+    });
+  },
+
+  movePreviousPage: () => {
+    dispatcher.dispatch({
+      actionType: 'movePreviousPage'
+    });
+  },
+
+  moveNextPage: () => {
+    dispatcher.dispatch({
+      actionType: 'moveNextPage'
     });
   }
 }
