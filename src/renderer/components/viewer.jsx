@@ -57,10 +57,15 @@ export class Viewer extends React.Component{
 
 
   componentWillMount() {
+    window.scrollTo(0, 0);
     this.styles = {
+      controller: {
+      },
       viewer: {
         height: this.props.bookHeight,
         width: this.props.bookWidth,
+        display: 'block',
+        margin: '0 auto'
       }
     };
   }
@@ -72,7 +77,7 @@ export class Viewer extends React.Component{
   render(){
     return(
       <div>
-        <div id='controller'>
+        <div id='controller' style={this.styles.controller}>
           <button id='prev' ref='prev' onClick={this.handleClickPrevious.bind(this)}>Previous</button>
           <span>
             Page:
