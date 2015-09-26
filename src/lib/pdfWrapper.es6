@@ -55,6 +55,21 @@ export class OpenViewer{
   }
 }
 
+export function bookSize(path, pageNum){
+  require('./vendor/pdf.combined.js');
+  var viewport = null;
+  var data = new Uint8Array(path);
+
+  return PDFJS.getDocument(data).then((pdf) => {
+    return pdf.getPage(1)
+  }).then((page) => {
+        var scale = 1.0;
+        viewport = page.getViewport(scale);
+        console.log(viewport);
+        return ({width: viewport.width, height: viewport.height});
+  });
+}
+
 export function viewerBook(path, domTarget, prevDom, nextDom, pageNumDom, pageCountDom){
   var pdfDoc = null,
       pageNum = 1,
@@ -132,8 +147,11 @@ export function renderBook(path, domTarget){
 
   PDFJS.getDocument(data).then(pdf => {
     pdf.getPage(1).then(page => {
-      var scale = 1.5;
+      console.log(page);
+      //console.log(page.__proto__.getViewport(1.0, 0));
+      var scale = 1.0;
       var viewport = page.getViewport(scale);
+      //console.log(viewport);
 
       var canvas = domTarget;
       var context = canvas.getContext('2d');
