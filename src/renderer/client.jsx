@@ -27,6 +27,9 @@ dispatcher.register(payload =>{
     case "moveNextPage":
       viewerStore.moveNextPage();
       break;
+    case "fitPageToWindow":
+      viewerStore.fitPageToWindow();
+      break;
   }
 });
 
@@ -40,8 +43,11 @@ class App extends React.Component{
     super();
     this.state = {purpose: 'bookshelf', item: null};
     this.handleChange = this.handleChange.bind(this);
+    this.viewerWidth = null;
+    this.viewerHeight = null;
     this.bookWidth = null;
     this.bookHeight = null;
+    this.scale = null;
   }
 
   handleChange(){
@@ -63,21 +69,23 @@ class App extends React.Component{
     console.log(this.props.book);
     bookSize(fs.readFileSync(bookshelf.register() + '/content/' + bookName), this.state.pageNum)
       .then((size) => {
-        let bookHeight = size.height;
-        let bookWidth = size.width;
+        this.bookHeight = size.height;
+        this.bookWidth = size.width;
         let windowHeight = window.innerHeight - 20;
         let windowWidth = window.innerWidth;
-        let resizedWidth = bookWidth * (windowHeight / bookHeight);
+        let resizedWidth = this.bookWidth * (windowHeight / this.bookHeight);
         let width = null;
         let height = null;
         if (resizedWidth <= windowWidth) {
-          this.bookHeight = windowHeight;
-          this.bookWidth = (bookWidth * (this.bookHeight/ bookHeight));
+          this.scale = windowHeight / this.bookHeight;
+          this.viewerHeight = windowHeight;
+          this.viewerWidth = (this.bookWidth * (this.viewerHeight/ this.bookHeight));
         } else {
-          this.bookWidth = windowWidth;
-          this.bookHeight = (bookHeight * (this.bookWidth / bookWidth));
+          this.scale = windowWidth / this.bookWidth;
+          this.viewerWidth = windowWidth;
+          this.viewerHeight = (this.bookHeight * (this.viewerWidth / this.bookWidth));
         }
-        console.log({'ww': windowWidth, 'wh': windowHeight, 'bw': bookWidth, 'bh': bookHeight, 'rw': resizedWidth});
+        console.log({'ww': windowWidth, 'wh': windowHeight, 'bw': this.bookWidth, 'bh': this.bookHeight, 'rw': resizedWidth});
         render();
       });
   }
@@ -94,7 +102,7 @@ class App extends React.Component{
     if(this.state.purpose == 'bookshelf'){
       return(<BooksCanvas books={books}/>);
     }else if(this.state.purpose == 'view'){
-      return(<Viewer book={this.state.item} bookHeight={this.bookHeight + 'px'} bookWidth={this.bookWidth + 'px'}/>);
+      return(<Viewer book={this.state.item} viewerHeight={this.viewerHeight + 'px'} viewerWidth={this.viewerWidth + 'px'} bookHeight={this.bookHeight} bookWidth={this.bookWidth} scale={this.scale}/>);
     }
   }
 }

@@ -6,12 +6,19 @@ export class Store{
     this.emitter = new EventEmitter();
   }
 
-  emitChange(){
-    this.emitter.emit(CHANGE_EVENT);
+  emitChange(e){
+    if(!e){
+      this.emitter.emit(CHANGE_EVENT);
+    }else{
+      this.emitter.emit(e);
+    }
   }
 
-  addChangeListener(callback){
-    this.emitter.on(CHANGE_EVENT, callback);
+  addChangeListener(callback, event){
+    if(!event){
+      event = CHANGE_EVENT;
+    }
+    this.emitter.on(event, callback);
   }
 
   removeChangeListener(callback){
