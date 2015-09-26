@@ -4,6 +4,7 @@ import Bookshelf from './../../browser/bookshelf';
 import {renderBook} from './../../lib/pdfWrapper'
 import {viewerBook} from './../../lib/pdfWrapper'
 import {OpenViewer} from './../../lib/pdfWrapper'
+import {bookSize} from './../../lib/pdfWrapper'
 import {ViewerActions} from './../../action/action'
 import {viewerStore} from './../../store/viewerStore';
 
@@ -18,22 +19,24 @@ var bookshelf = new Bookshelf();
 //  container: container
 //});
 
-var styles = {
-  viewer: {
-    height: '600px'
-  }
-}
 
 export class Viewer extends React.Component{
-  constructor(){
+  constructor() {
     super();
     this.viewer = null;
-    this.state = {pageNum: 1, pageCount:100};
+    this.state = {pageNum: 1, pageCount: 100, settingCanvasSize: false};
+    this.styles = {
+      viewer: {
+        height: '600px'
+      }
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 
   propTypes = {
-    book: React.PropTypes.string.isRequired
+    book: React.PropTypes.string.isRequired,
+    bookWidth: React.PropTypes.string.isRequired,
+    bookHeight: React.PropTypes.string.isRequired,
   }
 
   handleClickPrevious(e){
@@ -52,6 +55,20 @@ export class Viewer extends React.Component{
     });
   }
 
+
+  componentWillMount() {
+    this.styles = {
+      viewer: {
+        height: this.props.bookHeight,
+        width: this.props.bookWidth,
+      }
+    };
+  }
+
+  componentWillUpdate() {
+  }
+
+
   render(){
     return(
       <div>
@@ -65,19 +82,19 @@ export class Viewer extends React.Component{
           </span>
           <button id='next' ref='next' onClick={this.handleClickNext.bind(this)}>Next</button>
         </div>
-        <canvas style={styles.viewer} ref='viewerCanvasRef'/>
+        <canvas style={this.styles.viewer} ref='viewerCanvasRef'/>
       </div>
     );
   }
 
   componentDidMount(){
     this.viewer = new OpenViewer(
-                             fs.readFileSync(bookshelf.register() + '/content/' + this.props.book)
-                           , React.findDOMNode(this.refs.viewerCanvasRef)
-                           , React.findDOMNode(this.refs.pageNum)
-                           , React.findDOMNode(this.refs.pageCount)
-                           , this.state.pageNum
-                            );
+      fs.readFileSync(bookshelf.register() + '/content/' + this.props.book)
+      , React.findDOMNode(this.refs.viewerCanvasRef)
+      , React.findDOMNode(this.refs.pageNum)
+      , React.findDOMNode(this.refs.pageCount)
+      , this.state.pageNum
+    );
     viewerStore.addChangeListener(this.handleChange);
   }
 
