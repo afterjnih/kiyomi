@@ -26,6 +26,9 @@ export class Viewer extends React.Component{
     this.viewer = null;
     this.state = {pageNum: 1, pageCount: 100, settingCanvasSize: false,
                   styles: {
+                    content:{
+                     'text-align': 'center'
+                    },
                     viewer: {
                       height: '600px'
                     }
@@ -66,7 +69,7 @@ export class Viewer extends React.Component{
   }
 
   fitPageToWindow() {
-    //console.log('windowwwwwwwwwwwwwww');
+    //console.log('windowwwwwwwwwwwwww');
     console.log(this.props.scale);
     console.log(this.viewer);
     let windowHeight = window.innerHeight - 20;
@@ -82,7 +85,7 @@ export class Viewer extends React.Component{
       var viewerWidth = windowWidth;
       var viewerHeight = (this.props.bookHeight * (windowWidth / this.props.bookWidth));
     }
-    console.log('windowwwwwwwwwwwwwwww');
+    console.log('windowwwwwwwwwwwwww');
     //console.log({
     //  'wh': windowHeight,
     //  'ww': windowWidth,
@@ -93,13 +96,21 @@ export class Viewer extends React.Component{
     //this.viewer.renderPage(this.state.pageNum, scale);
     this.setState({
       styles: {
+        content:{
+          'text-align': 'center',
+          height: '100%'
+        },
         controller: {},
         viewer: {
           height: viewerHeight,
           width: viewerWidth,
-          display: 'block',
-          margin: '0 auto'
-        }
+          //display: 'block',
+          //margin: '0 auto'
+        },
+        viewerWrapper:{
+          'background-color': '#dcdcdc',
+          height: '100%'
+        },
       }
     });
     console.log(this.state);
@@ -118,13 +129,21 @@ export class Viewer extends React.Component{
     //  }
     //};
     this.setState({styles: {
+                          content:{
+                            'text-align': 'center',
+                            height: '100%'
+                          },
                           controller: {},
                           viewer: {
                             height: this.props.viewerHeight,
                             width: this.props.viewerWidth,
-                            display: 'block',
-                            margin: '0 auto'
-                          }
+                            //display: 'block',
+                            //margin: '0 auto'
+                          },
+                          viewerWrapper:{
+                            'background-color': '#dcdcdc',
+                            height: '100%'
+                          },
                         }
     });
   }
@@ -136,7 +155,7 @@ export class Viewer extends React.Component{
   render(){
     console.log('renderrrrrrrrrrrrrrrrrrrrrrrrrrr');
     return(
-      <div>
+      <div style={this.state.styles.content}>
         <div id='controller' style={this.state.styles.controller}>
           <button id='prev' ref='prev' onClick={this.handleClickPrevious.bind(this)}>Previous</button>
           <span>
@@ -147,7 +166,9 @@ export class Viewer extends React.Component{
           </span>
           <button id='next' ref='next' onClick={this.handleClickNext.bind(this)}>Next</button>
         </div>
-        <canvas style={this.state.styles.viewer} ref='viewerCanvasRef'/>
+        <div style={this.state.styles.viewerWrapper}>
+          <canvas style={this.state.styles.viewer} ref='viewerCanvasRef'/>
+        </div>
       </div>
     );
   }
