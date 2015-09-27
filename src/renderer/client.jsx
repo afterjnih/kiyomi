@@ -52,8 +52,6 @@ class App extends React.Component{
   }
 
   handleChange(){
-    //store.choose(this.props.item);
-    console.log('changeeeeeeeeeeeeee');
     bookshelfStore.bookName((item) =>{
       this.fitToWindowSize(item, () => {
         this.setState({
@@ -65,9 +63,6 @@ class App extends React.Component{
   }
 
   fitToWindowSize(bookName, render){
-    window.innerHeight;
-    window.innerWidth;
-    console.log(this.props.book);
     bookSize(fs.readFileSync(bookshelf.register() + '/content/' + bookName), this.state.pageNum)
       .then((size) => {
 
