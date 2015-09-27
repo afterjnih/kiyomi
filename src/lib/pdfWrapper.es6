@@ -18,14 +18,17 @@ export class OpenViewer{
     PDFJS.getDocument(this.data).then((pdfDoc_) => {
       this.pdfDoc = pdfDoc_;
       this.pageCountDom.textContent = this.pdfDoc.numPages;
-      this.renderPage(pageNum);
+      this.renderPage(pageNum, this.scale);
     });
   }
 
-   renderPage(pageNum){
+   renderPage(pageNum, scale){
+     if(!scale){
+       scale = this.scale;
+     }
       this.pageRendering = true;
       this.pdfDoc.getPage(pageNum).then((page) => {
-        let viewport = page.getViewport(this.scale);
+        let viewport = page.getViewport(scale);
         this.canvas.height = viewport.height;
         this.canvas.width = viewport.width;
 

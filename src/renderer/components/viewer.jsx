@@ -7,6 +7,7 @@ import {OpenViewer} from './../../lib/pdfWrapper'
 import {bookSize} from './../../lib/pdfWrapper'
 import {ViewerActions} from './../../action/action'
 import {viewerStore} from './../../store/viewerStore';
+import {getViewerSizeToFitWindow} from './../../lib/util'
 
 var bookshelf = new Bookshelf();
 //global.window = global;
@@ -24,19 +25,27 @@ export class Viewer extends React.Component{
   constructor() {
     super();
     this.viewer = null;
-    this.state = {pageNum: 1, pageCount: 100, settingCanvasSize: false};
-    this.styles = {
-      viewer: {
-        height: '600px'
-      }
-    };
+    this.state = {pageNum: 1, pageCount: 100,
+                  styles: {
+                    content:{
+                     'text-align': 'center'
+                    },
+                    viewer: {
+                      height: '600px'
+                    }
+                  }
+                 };
     this.handleChange = this.handleChange.bind(this);
+    this.fitPageToWindow = this.fitPageToWindow.bind(this);
   }
 
   propTypes = {
     book: React.PropTypes.string.isRequired,
-    bookWidth: React.PropTypes.string.isRequired,
-    bookHeight: React.PropTypes.string.isRequired,
+    viewerWidth: React.PropTypes.string.isRequired,
+    viewerHeight: React.PropTypes.string.isRequired,
+    scale: React.PropTypes.number,
+    bookWidth: React.PropTypes.number,
+    bookHeight: React.PropTypes.number
   }
 
   handleClickPrevious(e){
@@ -55,29 +64,57 @@ export class Viewer extends React.Component{
     });
   }
 
-
-  componentWillMount() {
-    window.scrollTo(0, 0);
-    this.styles = {
-      controller: {
-      },
-      viewer: {
-        height: this.props.bookHeight,
-        width: this.props.bookWidth,
-        display: 'block',
-        margin: '0 auto'
+  fitPageToWindow() {
+    let viewerWidth = null;
+    let viewerHeight = null;
+    [viewerWidth, viewerHeight] = getViewerSizeToFitWindow(this.props.bookWidth, this.props.bookHeight, window.innerWidth, window.innerHeight - 20);
+    this.setState({
+      styles: {
+        content:{
+          'text-align': 'center',
+          height: '100%'
+        },
+        controller: {},
+        viewer: {
+          height: viewerHeight,
+          width: viewerWidth,
+        },
+        viewerWrapper:{
+          'background-color': '#dcdcdc',
+          height: '100%'
+        },
       }
-    };
+    });
   }
 
-  componentWillUpdate() {
+  componentWillMount(){
+    window.scrollTo(0, 0);
+    this.setState({styles: {
+                          content:{
+                            'text-align': 'center',
+                            height: '100%'
+                          },
+                          controller: {},
+                          viewer: {
+                            height: this.props.viewerHeight,
+                            width: this.props.viewerWidth,
+                          },
+                          viewerWrapper:{
+                            'background-color': '#dcdcdc',
+                            height: '100%'
+                          },
+                        }
+    });
+  }
+
+  componentWillUpdate(){
   }
 
 
   render(){
     return(
-      <div>
-        <div id='controller' style={this.styles.controller}>
+      <div style={this.state.styles.content}>
+        <div id='controller' style={this.state.styles.controller}>
           <button id='prev' ref='prev' onClick={this.handleClickPrevious.bind(this)}>Previous</button>
           <span>
             Page:
@@ -87,7 +124,9 @@ export class Viewer extends React.Component{
           </span>
           <button id='next' ref='next' onClick={this.handleClickNext.bind(this)}>Next</button>
         </div>
-        <canvas style={this.styles.viewer} ref='viewerCanvasRef'/>
+        <div style={this.state.styles.viewerWrapper}>
+          <canvas style={this.state.styles.viewer} ref='viewerCanvasRef'/>
+        </div>
       </div>
     );
   }
@@ -101,6 +140,10 @@ export class Viewer extends React.Component{
       , this.state.pageNum
     );
     viewerStore.addChangeListener(this.handleChange);
+    viewerStore.addChangeListener(this.fitPageToWindow, 'fitPageToWindow');
+    require('ipc').on('fitPageToWindow', () => {
+      ViewerActions.fitPageToWindow();
+    });
   }
 
   componentDidUpdate(){
@@ -109,5 +152,6 @@ export class Viewer extends React.Component{
 
   componentWillUnmount(){
     viewerStore.removeChangeListener(this.handleChange);
+    viewerStore.removeChangeListener(this.fitPageToWindow);
   }
 }

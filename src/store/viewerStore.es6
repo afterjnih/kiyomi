@@ -10,6 +10,7 @@ class ViewerStore extends Store{
     this.booksCache = null;
   }
 
+
   getPageNum(callback){
     callback(this.pageNum);
   }
@@ -22,6 +23,10 @@ class ViewerStore extends Store{
   moveNextPage(){
     this.pageNum++;
     this.emitChange();
+  }
+
+  fitPageToWindow(){
+    this.emitChange('fitPageToWindow');
   }
   removeChangeListner
 }

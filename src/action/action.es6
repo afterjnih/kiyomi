@@ -35,5 +35,11 @@ export var ViewerActions = {
     dispatcher.dispatch({
       actionType: 'moveNextPage'
     });
+  },
+
+  fitPageToWindow: () => {
+    dispatcher.dispatch({
+      actionType: 'fitPageToWindow'
+    });
   }
 }
