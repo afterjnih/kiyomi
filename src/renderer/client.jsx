@@ -7,6 +7,7 @@ import {bookshelfStore} from './store/BookshelfStore';
 import {viewerStore} from './store/viewerStore';
 import {dispatcher} from './dispatcher/dispatcher';
 import {bookSize} from './lib/pdfWrapper'
+import {getViewerSizeToFitWindow} from './lib/util'
 
 //resizeTo(600, window.parent.screen.height);
 
@@ -69,23 +70,10 @@ class App extends React.Component{
     console.log(this.props.book);
     bookSize(fs.readFileSync(bookshelf.register() + '/content/' + bookName), this.state.pageNum)
       .then((size) => {
+
         this.bookHeight = size.height;
         this.bookWidth = size.width;
-        let windowHeight = window.innerHeight - 20;
-        let windowWidth = window.innerWidth;
-        let resizedWidth = this.bookWidth * (windowHeight / this.bookHeight);
-        let width = null;
-        let height = null;
-        if (resizedWidth <= windowWidth) {
-          this.scale = windowHeight / this.bookHeight;
-          this.viewerHeight = windowHeight;
-          this.viewerWidth = (this.bookWidth * (this.viewerHeight/ this.bookHeight));
-        } else {
-          this.scale = windowWidth / this.bookWidth;
-          this.viewerWidth = windowWidth;
-          this.viewerHeight = (this.bookHeight * (this.viewerWidth / this.bookWidth));
-        }
-        console.log({'ww': windowWidth, 'wh': windowHeight, 'bw': this.bookWidth, 'bh': this.bookHeight, 'rw': resizedWidth});
+        [this.viewerWidth, this.viewerHeight] = getViewerSizeToFitWindow(this.bookWidth, this.bookHeight, window.innerWidth, window.innerHeight - 20);
         render();
       });
   }

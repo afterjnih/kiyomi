@@ -7,6 +7,7 @@ import {OpenViewer} from './../../lib/pdfWrapper'
 import {bookSize} from './../../lib/pdfWrapper'
 import {ViewerActions} from './../../action/action'
 import {viewerStore} from './../../store/viewerStore';
+import {getViewerSizeToFitWindow} from './../../lib/util'
 
 var bookshelf = new Bookshelf();
 //global.window = global;
@@ -64,18 +65,9 @@ export class Viewer extends React.Component{
   }
 
   fitPageToWindow() {
-    console.log(this.props.scale);
-    console.log(this.viewer);
-    let windowHeight = window.innerHeight - 20;
-    let windowWidth = window.innerWidth;
-    let resizedWidth = this.props.bookWidth * (windowHeight / this.props.bookHeight);
-    if (resizedWidth <= windowWidth) {
-      var viewerHeight = windowHeight;
-      var viewerWidth = (this.props.bookWidth * (windowHeight / this.props.bookHeight));
-    } else {
-      var viewerWidth = windowWidth;
-      var viewerHeight = (this.props.bookHeight * (windowWidth / this.props.bookWidth));
-    }
+    let viewerWidth = null;
+    let viewerHeight = null;
+    [viewerWidth, viewerHeight] = getViewerSizeToFitWindow(this.props.bookWidth, this.props.bookHeight, window.innerWidth, window.innerHeight - 20);
     this.setState({
       styles: {
         content:{
