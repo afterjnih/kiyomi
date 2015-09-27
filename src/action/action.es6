@@ -32,17 +32,14 @@ export var ViewerActions = {
   },
 
   moveNextPage: () => {
-    console.log('moveeeeeeeeeeeeeeeeeeeeee');
     dispatcher.dispatch({
       actionType: 'moveNextPage'
     });
   },
 
   fitPageToWindow: () => {
-    console.log('fit2222222222222222221');
     dispatcher.dispatch({
       actionType: 'fitPageToWindow'
     });
-    console.log('fit3333333333333333331');
   }
 }
