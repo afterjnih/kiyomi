@@ -26,7 +26,6 @@ class ViewerStore extends Store{
   }
 
   fitPageToWindow(){
-    console.log('fittttttttttttttttstore');
     this.emitChange('fitPageToWindow');
   }
   removeChangeListner

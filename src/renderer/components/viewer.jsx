@@ -24,7 +24,7 @@ export class Viewer extends React.Component{
   constructor() {
     super();
     this.viewer = null;
-    this.state = {pageNum: 1, pageCount: 100, settingCanvasSize: false,
+    this.state = {pageNum: 1, pageCount: 100,
                   styles: {
                     content:{
                      'text-align': 'center'
@@ -34,11 +34,6 @@ export class Viewer extends React.Component{
                     }
                   }
                  };
-    //this.styles = {
-    //  viewer: {
-    //    height: '600px'
-    //  }
-    //};
     this.handleChange = this.handleChange.bind(this);
     this.fitPageToWindow = this.fitPageToWindow.bind(this);
   }
@@ -69,31 +64,18 @@ export class Viewer extends React.Component{
   }
 
   fitPageToWindow() {
-    //console.log('windowwwwwwwwwwwwww');
     console.log(this.props.scale);
     console.log(this.viewer);
     let windowHeight = window.innerHeight - 20;
     let windowWidth = window.innerWidth;
     let resizedWidth = this.props.bookWidth * (windowHeight / this.props.bookHeight);
-    let scale = null;
     if (resizedWidth <= windowWidth) {
-      //scale = windowHeight / this.props.bookHeight;
       var viewerHeight = windowHeight;
       var viewerWidth = (this.props.bookWidth * (windowHeight / this.props.bookHeight));
     } else {
-      //scale = windowWidth / this.props.bookWidth;
       var viewerWidth = windowWidth;
       var viewerHeight = (this.props.bookHeight * (windowWidth / this.props.bookWidth));
     }
-    console.log('windowwwwwwwwwwwwww');
-    //console.log({
-    //  'wh': windowHeight,
-    //  'ww': windowWidth,
-    //  'bh': this.props.bookHeight,
-    //  'bw': this.props.bookWidth,
-    //  'scale': scale
-    //});
-    //this.viewer.renderPage(this.state.pageNum, scale);
     this.setState({
       styles: {
         content:{
@@ -104,8 +86,6 @@ export class Viewer extends React.Component{
         viewer: {
           height: viewerHeight,
           width: viewerWidth,
-          //display: 'block',
-          //margin: '0 auto'
         },
         viewerWrapper:{
           'background-color': '#dcdcdc',
@@ -113,21 +93,10 @@ export class Viewer extends React.Component{
         },
       }
     });
-    console.log(this.state);
   }
 
   componentWillMount(){
     window.scrollTo(0, 0);
-    //this.styles = {
-    //  controller: {
-    //  },
-    //  viewer: {
-    //    height: this.props.viewerHeight,
-    //    width: this.props.viewerWidth,
-    //    display: 'block',
-    //    margin: '0 auto'
-    //  }
-    //};
     this.setState({styles: {
                           content:{
                             'text-align': 'center',
@@ -137,8 +106,6 @@ export class Viewer extends React.Component{
                           viewer: {
                             height: this.props.viewerHeight,
                             width: this.props.viewerWidth,
-                            //display: 'block',
-                            //margin: '0 auto'
                           },
                           viewerWrapper:{
                             'background-color': '#dcdcdc',
@@ -153,7 +120,6 @@ export class Viewer extends React.Component{
 
 
   render(){
-    console.log('renderrrrrrrrrrrrrrrrrrrrrrrrrrr');
     return(
       <div style={this.state.styles.content}>
         <div id='controller' style={this.state.styles.controller}>
