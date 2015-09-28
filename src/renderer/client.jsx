@@ -61,21 +61,10 @@ var createBooksCanvasElement = React.createClass({
   }
 });
 
-var viewerElement = React.createClass({
-  render: function(){
-    return(
-      <Viewer book={'everydayrailsrspec-jp.pdf'}/>
-    );
-  }
-});
-
 require('ipc').on('fitPageToWindow', () => {
-  console.log('ipddddddddddddddddddddddddddddddddddd');
-  //document.location.href = '#/bookshelf'
   ViewerActions.fitPageToWindow();
 });
-console.log(createBooksCanvasElement);
-//<Route  path='/viewer' component={viewerElement}/>
+
 var appRouter = (
   <Router>
     <Route  path='/' component={createBooksCanvasElement}/>
@@ -85,111 +74,3 @@ var appRouter = (
 );
 
 React.render(appRouter, document.getElementById('canvas-wrapper'));
-
-class App extends React.Component{
-  constructor(){
-    super();
-    this.state = {purpose: 'bookshelf', item: null};
-    this.handleChange = this.handleChange.bind(this);
-    this.showTheLibrary = this.showTheLibrary.bind(this);
-    this.viewerWidth = null;
-    this.viewerHeight = null;
-    this.bookWidth = null;
-    this.bookHeight = null;
-    this.scale = null;
-  }
-
-  handleChange(tmp){
-    switch(tmp){
-      case 'choose':
-        console.log(this.state);
-        console.log('changeeeeeeeeeeeeeeee');
-        bookshelfStore.bookName((item) =>{
-          this.fitToWindowSize(item, () => {
-            this.setState({
-              purpose: 'view',
-              item: item
-            });
-          });
-        });
-        break;
-      //case 'showTheLibrary':
-      //  console.log('librryyyyyyyyyyclient');
-      //  this.setState({
-      //    purpose: 'bookshelf'
-      //  });
-      //  break;
-    }
-
-
-    //console.log(this.state);
-    //console.log('changeeeeeeeeeeeeeeee');
-    //bookshelfStore.bookName((item) =>{
-    //  this.fitToWindowSize(item, () => {
-    //    this.setState({
-    //      purpose: 'view',
-    //      item: item
-    //    });
-    //  });
-    //});
-  }
-
-  showTheLibrary(){
-    this.setState({
-      purpose: 'bookshelf'
-    });
-  }
-
-  fitToWindowSize(bookName, render){
-    bookSize(fs.readFileSync(bookshelf.register() + '/content/' + bookName), this.state.pageNum)
-      .then((size) => {
-
-        this.bookHeight = size.height;
-        this.bookWidth = size.width;
-        [this.viewerWidth, this.viewerHeight] = getViewerSizeToFitWindow(this.bookWidth, this.bookHeight, window.innerWidth, window.innerHeight - 20);
-        render();
-      });
-  }
-
-  componentDidMount(){
-    bookshelfStore.addChangeListener(this.handleChange);
-    viewerStore.addChangeListener(this.showTheLibrary, 'showTheLibrary');
-    //viewerStore.addChangeListenerEM(this.showTheLibrary);
-    console.log('clientttttttttttttttttttttttttttttttttttt');
-    require('ipc').on('fitPageToWindow', () => {
-      console.log('ipddddddddddddddddddddddddddddddddddd');
-      ViewerActions.fitPageToWindow();
-    });
-    viewerStore.addChangeListener(this.handleChange);
-  }
-
-  componentWillUnmount(){
-    bookshelfStore.removeChangeListener(this.handleChange);
-    viewerStore.removeChangeListener(this.showTheLibrary, 'showTheLibrary');
-    //viewerStore.removeChangeListenerEM(this.showTheLibrary);
-    viewerStore.removeChangeListener(this.handleChange);
-  }
-
-  render(){
-    console.log('renderrrrrrrrrrrrrrrrrr');
-    if(this.state.purpose == 'bookshelf'){
-      console.log('shelffffffffffffffffffffffff');
-      return(
-        <div>
-          <BooksCanvas books={books}/>
-        </div>
-      );
-    }else if(this.state.purpose == 'view'){
-      console.log('viewwwwwwwwwwwwwwwwwwwwwwww');
-      console.log({'book': this.state.item, 'vh': this.viewerHeight});
-      console.log(Viewer);
-      return(
-        <div>
-          <Viewer book={this.state.item} viewerHeight={this.viewerHeight + 'px'} viewerWidth={this.viewerWidth + 'px'} bookHeight={this.bookHeight} bookWidth={this.bookWidth} scale={this.scale}/>
-        </div>
-      );
-    }
-  }
-}
-
-//React.render(<App/>, document.getElementById('canvas-wrapper'));

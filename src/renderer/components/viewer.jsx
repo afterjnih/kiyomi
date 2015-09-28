@@ -28,7 +28,6 @@ require('./../../lib/vendor/pdf.combined.js');
 export class Viewer extends React.Component{
   constructor() {
     super();
-    console.log('startviewerrrrrrrrrrrrrrrrrrrrrrrrrrrr');
     this.viewer = null;
     this.state = {purpose: 'view', pageNum: 1, pageCount: 100,
                   styles: {
@@ -70,12 +69,9 @@ export class Viewer extends React.Component{
           });
         });
         break;
-      case 'showTheLibrary':
-        console.log('librryyyyyyyyyy');
-        this.setState({purpose: 'bookshelf'});
-        break;
-        }
+      }
     }
+
 
   fitPageToWindow() {
     bookSize(fs.readFileSync(bookshelf.register() + '/content/' + this.props.params.book), this.state.pageNum)
