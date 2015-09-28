@@ -8,7 +8,7 @@ export var BookshelfActions = {
     });
   },
 
-  star: (item) => {
+  start: (item) => {
     dispatcher.dispatch({
       actionType: 'start',
       item: item
@@ -40,6 +40,12 @@ export var ViewerActions = {
   fitPageToWindow: () => {
     dispatcher.dispatch({
       actionType: 'fitPageToWindow'
+    });
+  },
+
+  showTheLibrary: () => {
+    dispatcher.dispatch({
+      actionType:'showTheLibrary'
     });
   }
 }

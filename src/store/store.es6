@@ -6,23 +6,28 @@ export class Store{
     this.emitter = new EventEmitter();
   }
 
-  emitChange(e){
-    if(!e){
-      this.emitter.emit(CHANGE_EVENT);
-    }else{
-      this.emitter.emit(e);
-    }
+  emitChange(arg){
+    //if(!e){
+      this.emitter.emit(CHANGE_EVENT, arg);
+    //}else{
+    //  this.emitter.emit(e, arg);
+    //}
   }
 
   addChangeListener(callback, event){
+    console.log(this.emitter);
     if(!event){
       event = CHANGE_EVENT;
     }
     this.emitter.on(event, callback);
+    console.log(this.emitter);
   }
 
   removeChangeListener(callback){
-    this.emitter.removeListener(CHANGE_EVENT, callback);
+    console.log(callback);
+    console.log(this.emitter);
+    //this.emitter.removeListener(CHANGE_EVENT, callback);
+    this.emitter.off(CHANGE_EVENT, callback);
   }
 }
 var store = new Store();

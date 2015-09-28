@@ -1,8 +1,10 @@
 import fs from 'fs'
 import React from 'react'
+import {Router, Route, Link} from 'react-router'
 import {renderBook} from './../../lib/pdfWrapper'
 import {Viewer} from './viewer'
 import {BookshelfActions} from './../../action/action'
+import {bookshelfStore} from './../../store/BookShelfStore'
 
 export class Books extends React.Component{
   constructor () {
@@ -49,7 +51,10 @@ class Book extends React.Component{
 
 export class BooksCanvas extends React.Component{
   constructor(){
+    console.log('yobaretayo');
     super();
+    this.state = {purpose: 'bookshelf', pageNum: 1, pageCount: 100, bookName: 'eversy'};
+    this.handleChange = this.handleChange.bind(this);
   }
 
   propTypes = {
@@ -58,6 +63,26 @@ export class BooksCanvas extends React.Component{
 
   handleItemChoose(item){
     BookshelfActions.choose(item);
+  }
+
+  comopnentWillReceiveProps(){
+
+    console.log('ajkdsfffffffffffffffffffffffffffffffffff');
+  }
+  componentWillUpdate(){
+   console.log('hellllllllllllllllllllllllllllllllllllllllllllllllllllllll');
+  }
+  handleChange(tmp){
+    switch (tmp){
+      case "choose":
+        BookShelfStore.bookName((bookName) => {
+          this.setState({
+            bookName: bookName,
+            purpose: 'view'
+          });
+        });
+        break;
+    }
   }
 
   renderBooks(books){
@@ -71,11 +96,25 @@ export class BooksCanvas extends React.Component{
 
   render(){
     console.log(this.props.books);
-    return(
-      <div className='bookshelf'>
-        {this.renderBooks(this.props.books)}
-      </div>
-    );
+    console.log(this.state.purpose);
+    if(this.state.purpose == 'view'){
+      //return(<Viewer book={this.state.item} viewerHeight={this.viewerHeight + 'px'} viewerWidth={this.viewerWidth + 'px'} bookHeight={this.bookHeight} bookWidth={this.bookWidth} scale={this.scale}/>);
+      return(<Viewer book={this.state.bookName} viewerHeight={500 + 'px'} viewerWidth={500 + 'px'} bookHeight={500} bookWidth={500} scale={1.0}/>);
+    }else if(this.state.purpose == 'bookshelf') {
+      return (
+        <div className='bookshelf'>
+          {this.renderBooks(this.props.books)}
+        </div>
+      );
+    }
+  }
+  componentDidMount(){
+  //  bookshelfStore.addChangeListener(this.handleChange);
+  }
+
+  componentWillUnmount() {
+    //bookshelfStore.removeChangeListener(this.handleChange);
+    console.log('unmounbokkkkkkkkkkkkkkkkkkkkkkkkk');
   }
 }
 
@@ -98,7 +137,9 @@ export class BookCanvas extends React.Component{
   render(){
     return(
       //use bind to workaround undefined this on es6
-      <canvas ref='bookCanvasRef' onClick={this.handleClick.bind(this)}/>
+      <Link to={'/viewer/' + this.props.book + '/1/0/0/0/0'} >
+          <canvas ref='bookCanvasRef'/>
+      </Link>
     );
   }
 
