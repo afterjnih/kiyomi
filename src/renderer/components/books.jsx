@@ -21,12 +21,12 @@ export class BooksCanvas extends React.Component{
     });
   }
 
-  render(){
-      return (
-        <div className='bookshelf'>
-          {this.renderBooks(this.props.books)}
-        </div>
-      );
+  render() {
+    return (
+      <div className='bookshelf'>
+        {this.renderBooks(this.props.books)}
+      </div>
+    );
   }
 }
 
@@ -34,6 +34,7 @@ export class BookCanvas extends React.Component{
   constructor(){
     super();
   }
+
   propTypes = {
     book: React.PropTypes.string.isRequired,
     bookNumber: React.PropTypes.number.isRequired
