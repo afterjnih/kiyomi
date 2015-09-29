@@ -1,33 +1,20 @@
-import EventEmitter from 'event-emitter';
-var CHANGE_EVENT = "changeEvent"
+import EventEmitter from 'events';
 
 export class Store{
   constructor(){
-    this.emitter = new EventEmitter();
+    this.emitter = new (EventEmitter.EventEmitter);
   }
 
-  emitChange(arg){
-    //if(!e){
-      this.emitter.emit(CHANGE_EVENT, arg);
-    //}else{
-    //  this.emitter.emit(e, arg);
-    //}
+  emitChange(event){
+    this.emitter.emit(event);
   }
 
-  addChangeListener(callback, event){
-    console.log(this.emitter);
-    if(!event){
-      event = CHANGE_EVENT;
-    }
+  addChangeListener(event, callback){
     this.emitter.on(event, callback);
-    console.log(this.emitter);
   }
 
-  removeChangeListener(callback){
-    console.log(callback);
-    console.log(this.emitter);
-    //this.emitter.removeListener(CHANGE_EVENT, callback);
-    this.emitter.off(CHANGE_EVENT, callback);
+  removeChangeListener(event, callback){
+    this.emitter.removeListener(event, callback);
   }
 }
 var store = new Store();
