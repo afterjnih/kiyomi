@@ -39,8 +39,8 @@ export class Viewer extends React.Component{
                     }
                   }
                  };
-    this.handleChange = this.handleChange.bind(this);
     this.fitPageToWindow = this.fitPageToWindow.bind(this);
+    this.movePage = this.movePage.bind(this);
   }
 
   propTypes = {
@@ -60,18 +60,13 @@ export class Viewer extends React.Component{
     ViewerActions.moveNextPage();
   }
 
-  handleChange(tmp){
-    switch(tmp){
-      case 'movePage':
-        viewerStore.getPageNum((pageNum) => {
-          this.setState({
-            pageNum: pageNum
-          });
-        });
-        break;
-      }
-    }
-
+  movePage(){
+    viewerStore.getPageNum((pageNum) => {
+      this.setState({
+        pageNum: pageNum
+      });
+    });
+  }
 
   fitPageToWindow() {
     bookSize(fs.readFileSync(bookshelf.register() + '/content/' + this.props.params.book), this.state.pageNum)
@@ -104,7 +99,6 @@ export class Viewer extends React.Component{
         });
       });
   }
-
 
   componentWillMount(){
     window.scrollTo(0, 0);
@@ -166,15 +160,12 @@ export class Viewer extends React.Component{
           , React.findDOMNode(this.refs.pageCount)
           , this.state.pageNum
         );
-        viewerStore.addChangeListener(this.handleChange);
-        viewerStore.addChangeListenerEM(this.fitPageToWindow);
+        viewerStore.addChangeListener('fitPageToWindow', this.fitPageToWindow);
+        viewerStore.addChangeListener('movePage', this.movePage);
         require('ipc').on('showTheLibrary', () => {
           ViewerActions.showTheLibrary();
         });
       });
-  }
-
-  componentWillUpdate(){
   }
 
   componentDidUpdate(){
@@ -184,7 +175,7 @@ export class Viewer extends React.Component{
   }
 
   componentWillUnmount(){
-    viewerStore.removeChangeListener(this.handleChange);
-    viewerStore.removeChangeListenerEM(this.fitPageToWindow);
+    viewerStore.removeChangeListener('fitPageToWindow', this.fitPageToWindow);
+    viewerStore.removeChangeListener('movePage', this.movePage);
   }
 }
