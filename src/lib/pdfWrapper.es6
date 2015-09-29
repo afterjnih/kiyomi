@@ -64,7 +64,7 @@ export function bookSize(path, pageNum){
   var data = new Uint8Array(path);
 
   return PDFJS.getDocument(data).then((pdf) => {
-    return pdf.getPage(1)
+    return pdf.getPage(pageNum)
   }).then((page) => {
         var scale = 1.0;
         viewport = page.getViewport(scale);

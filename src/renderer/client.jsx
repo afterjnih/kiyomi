@@ -2,9 +2,12 @@ import fs from 'fs';
 import {BooksCanvas} from './renderer/components/books';
 import {Viewer} from './renderer/components/viewer';
 import React from 'react';
+import {Router, Route, Link} from 'react-router'
+var RouteHandler = Router.RouteHandler;
 import Bookshelf from './browser/bookshelf';
 import {bookshelfStore} from './store/BookshelfStore';
 import {viewerStore} from './store/viewerStore';
+import {ViewerActions} from './action/action'
 import {dispatcher} from './dispatcher/dispatcher';
 import {bookSize} from './lib/pdfWrapper'
 import {getViewerSizeToFitWindow} from './lib/util'
@@ -31,63 +34,43 @@ dispatcher.register(payload =>{
     case "fitPageToWindow":
       viewerStore.fitPageToWindow();
       break;
+    case 'showTheLibrary':
+      viewerStore.showTheLibrary();
+      break;
   }
 });
 
 let bookshelf = new Bookshelf();
-let books;
+var books;
 console.log(bookshelf.register());
 console.log(books = bookshelf.getAllContentPath());
 
-class App extends React.Component{
-  constructor(){
-    super();
-    this.state = {purpose: 'bookshelf', item: null};
-    this.handleChange = this.handleChange.bind(this);
-    this.viewerWidth = null;
-    this.viewerHeight = null;
-    this.bookWidth = null;
-    this.bookHeight = null;
-    this.scale = null;
+//function _createBooksCanvasElement(props){
+//  React.createClass({
+//      render(){
+//        return (<BooksCanvas books={props}/>);
+//      }
+//    });
+//}
+
+var createBooksCanvasElement = React.createClass({
+  render: function(){
+    return(
+      <BooksCanvas books={books}/>
+    );
   }
+});
 
-  handleChange(){
-    bookshelfStore.bookName((item) =>{
-      this.fitToWindowSize(item, () => {
-        this.setState({
-          purpose: 'view',
-          item: item
-        });
-      });
-    });
-  }
+require('ipc').on('fitPageToWindow', () => {
+  ViewerActions.fitPageToWindow();
+});
 
-  fitToWindowSize(bookName, render){
-    bookSize(fs.readFileSync(bookshelf.register() + '/content/' + bookName), this.state.pageNum)
-      .then((size) => {
+var appRouter = (
+  <Router>
+    <Route  path='/' component={createBooksCanvasElement}/>
+    <Route  path='/bookshelf' component={createBooksCanvasElement}/>
+    <Route  path='/viewer/:book/:pageNum/:viewerWidth/:viewerHeight/:bookWidth/:bookHeight' component={Viewer}/>
+  </Router>
+);
 
-        this.bookHeight = size.height;
-        this.bookWidth = size.width;
-        [this.viewerWidth, this.viewerHeight] = getViewerSizeToFitWindow(this.bookWidth, this.bookHeight, window.innerWidth, window.innerHeight - 20);
-        render();
-      });
-  }
-
-  componentDidMount(){
-    bookshelfStore.addChangeListener(this.handleChange);
-  }
-
-  componentWillUnmount(){
-    bookshelfStore.removeChangeListener(this.handleChange);
-  }
-
-  render(){
-    if(this.state.purpose == 'bookshelf'){
-      return(<BooksCanvas books={books}/>);
-    }else if(this.state.purpose == 'view'){
-      return(<Viewer book={this.state.item} viewerHeight={this.viewerHeight + 'px'} viewerWidth={this.viewerWidth + 'px'} bookHeight={this.bookHeight} bookWidth={this.bookWidth} scale={this.scale}/>);
-    }
-  }
-}
-
-React.render(<App/>, document.getElementById('canvas-wrapper'));
+React.render(appRouter, document.getElementById('canvas-wrapper'));

@@ -35,8 +35,9 @@ let template = [
     submenu: [
       {label: 'Fit the Window', accelerator: 'Command+_', click: ()=> {
         mainWindow.webContents.send('fitPageToWindow');
-        ViewerActions.fitPageToWindow();
-        console.log('fit1111111111111111111');
+      }},
+      {label: 'Show the Library', accelerator: 'Command+l', click: () => {
+        mainWindow.webContents.send('showTheLibrary');
       }}
     ]
   }

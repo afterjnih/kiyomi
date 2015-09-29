@@ -12,7 +12,7 @@ class BookshelfStore extends Store{
     console.log("chosen item is" + item);
     this.purpose = 'view';
     this.item = item;
-   this.emitChange();
+   this.emitChange('choose');
   }
 
   start(item){

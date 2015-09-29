@@ -131,7 +131,7 @@ gulp.task('babel_store', function(){
 });
 
 gulp.task('copy_html', function(){
-  return gulp.src('./src/index.html')
+  return gulp.src(['./src/index.html', './src/viewer.html'])
     .pipe(plumber({
       errorHandler: notify.onError('Error: <%= error.message %>')
     }))
@@ -166,12 +166,12 @@ gulp.task('test', ['babel_component', 'babel_browser', 'babel_renderer', 'babel_
 gulp.task('watch', function(){
   gulp.watch(['./src/**/*.{es6,jsx}', './src/*.{es6,jsx}'], ['babel_browser', 'babel_renderer', 'babel_app','babel_component', 'babel_lib', 'babel_action', 'babel_dispatcher', 'babel_store']);
   gulp.watch(['./src/styles/*.scss'], ['sass']);
-  gulp.watch(['./src/index.html'], ['copy_html']);
+  gulp.watch(['./src/index.html', './src/viewer.html'], ['copy_html']);
 });
 
 gulp.task('start', ['watch', 'babel_component', 'babel_browser', 'babel_renderer', 'babel_app', 'sass', 'copy_html', 'babel_action'], function ()  {
   electron.start();
   gulp.watch('./src/**/*.es6', ['babel_browser', 'babel_renderer']);
   gulp.watch(['./app/app.js','./app/browser/*.js'], electron.restart);
-  gulp.watch(['./app/index.html', './app/renderer/*.js', './app/styles/*.css'], electron.reload);
+  gulp.watch(['./app/index.html','./app/viewer.html', './app/renderer/*.js', './app/styles/*.css'], electron.reload);
 });
