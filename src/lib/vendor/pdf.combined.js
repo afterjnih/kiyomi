@@ -1614,13 +1614,15 @@ PDFJS.maxImageSize = (PDFJS.maxImageSize === undefined ?
  * slash.
  * @var {string}
  */
-PDFJS.cMapUrl = (PDFJS.cMapUrl === undefined ? null : PDFJS.cMapUrl);
+//PDFJS.cMapUrl = (PDFJS.cMapUrl === undefined ? null : PDFJS.cMapUrl);
+PDFJS.cMapUrl = './lib/vendor/cmaps/';
 
 /**
  * Specifies if CMaps are binary packed.
  * @var {boolean}
  */
-PDFJS.cMapPacked = PDFJS.cMapPacked === undefined ? false : PDFJS.cMapPacked;
+//PDFJS.cMapPacked = PDFJS.cMapPacked === undefined ? false : PDFJS.cMapPacked;
+PDFJS.cMapPacked = true;
 
 /**
  * By default fonts are converted to OpenType fonts and loaded via font face
