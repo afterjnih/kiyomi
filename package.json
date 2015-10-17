@@ -14,7 +14,7 @@
   "devDependencies": {
     "electron-connect": "^0.3.3",
     "electron-packager": "^5.1.0",
-    "electron-prebuilt": "^0.33.0",
+    "electron-prebuilt": "^0.34.0",
     "eslint-plugin-react": "^3.4.2",
     "espower-babel": "^3.3.0",
     "espower-loader": "^1.0.0",
@@ -30,7 +30,7 @@
     "intelli-espower-loader": "^1.0.0",
     "mocha": "^2.3.3",
     "power-assert": "^1.0.1",
-    "react": "^0.13.3",
+    "react": "^0.14.0",
     "react-router": "^1.0.0-rc1"
   }
 }

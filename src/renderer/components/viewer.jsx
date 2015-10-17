@@ -60,6 +60,23 @@ export class Viewer extends React.Component{
     ViewerActions.moveNextPage();
   }
 
+  handleKeyDown(e){
+    switch(e.keyCode) {
+      case 37:
+        ViewerActions.movePreviousPage();
+        break;
+      case 38:
+        ViewerActions.movePreviousPage();
+        break;
+      case 39:
+        ViewerActions.moveNextPage();
+        break;
+      case 40:
+        ViewerActions.moveNextPage();
+        break;
+    }
+  }
+
   movePage(){
     viewerStore.getPageNum((pageNum) => {
       this.setState({
@@ -105,6 +122,7 @@ export class Viewer extends React.Component{
     this.fitPageToWindow();
   }
 
+
   render(){
       return (
         <div style={this.state.styles.content}>
@@ -129,6 +147,7 @@ export class Viewer extends React.Component{
   }
 
   componentDidMount(){
+    window.addEventListener('keydown', this.handleKeyDown);
     bookSize(fs.readFileSync(bookshelf.register() + '/content/' + this.props.params.book), this.state.pageNum)
       .then((size) => {
         let viewerWidth = null;
@@ -177,5 +196,6 @@ export class Viewer extends React.Component{
   componentWillUnmount(){
     viewerStore.removeChangeListener('fitPageToWindow', this.fitPageToWindow);
     viewerStore.removeChangeListener('movePage', this.movePage);
+    window.removeEventListener('keydown', this.handleKeyDown);
   }
 }
