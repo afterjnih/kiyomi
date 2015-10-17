@@ -1,7 +1,7 @@
 import React from 'react';
 import {Router, Route, Link} from 'react-router'
 import fs from 'fs';
-import Bookshelf from './../../browser/bookshelf';
+import bookshelf from './../../browser/bookshelf';
 import {renderBook} from './../../lib/pdfWrapper'
 import {viewerBook} from './../../lib/pdfWrapper'
 import {OpenViewer} from './../../lib/pdfWrapper'
@@ -12,7 +12,7 @@ import {getViewerSizeToFitWindow} from './../../lib/util'
 import {bookshelfStore} from './../../store/BookshelfStore';
 import {BooksCanvas} from './../../renderer/components/books';
 
-var bookshelf = new Bookshelf();
+//var bookshelf = new Bookshelf();
 global.window = global;
 global.navigator = {userAgent: 'node'};
 global.PDFJS = {};

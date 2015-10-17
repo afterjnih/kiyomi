@@ -2,6 +2,7 @@ import fs from 'fs'
 import React from 'react'
 import {Router, Route, Link} from 'react-router'
 import {renderBook} from './../../lib/pdfWrapper'
+import bookshelf from './../../browser/bookshelf';
 
 export class BooksCanvas extends React.Component{
   constructor(){

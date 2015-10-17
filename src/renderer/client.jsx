@@ -4,7 +4,7 @@ import {Viewer} from './renderer/components/viewer';
 import React from 'react';
 import {Router, Route, Link} from 'react-router'
 var RouteHandler = Router.RouteHandler;
-import Bookshelf from './browser/bookshelf';
+import bookshelf from './browser/bookshelf';
 import {bookshelfStore} from './store/BookshelfStore';
 import {viewerStore} from './store/viewerStore';
 import {ViewerActions} from './action/action'
@@ -40,7 +40,7 @@ dispatcher.register(payload =>{
   }
 });
 
-let bookshelf = new Bookshelf();
+//let bookshelf = new Bookshelf();
 var books;
 console.log(bookshelf.register());
 console.log(books = bookshelf.getAllContentPath());

@@ -2,12 +2,12 @@ import remote from 'remote';
 var app = remote.require('app');
 import fs from 'fs';
 
-export default class Bookshelf{
-  register(){
+var bookshelf = {
+  register: () => {
     return app.getPath('userData');
-  }
+  },
 
-  getAllContentPath(){
+  getAllContentPath: () => {
     let files;
     let contentPath;
     try {
@@ -20,4 +20,6 @@ export default class Bookshelf{
      return files;
     }
   }
-}
+};
+//var o = {x: 1};
+export default bookshelf;
